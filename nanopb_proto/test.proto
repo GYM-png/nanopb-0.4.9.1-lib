@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+import "nanopb.proto";
+
+package test;
+
+message file_info
+{
+    uint32 file_size = 1;
+    repeated uint32 file_hash = 2[(nanopb).max_count = 32];
+    string version = 3[(nanopb).max_size = 40];
+    bytes data = 4[(nanopb).max_size = 1024];
+}
