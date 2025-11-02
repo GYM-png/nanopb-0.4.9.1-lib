@@ -8,13 +8,15 @@ message Frame
 {
     oneof load
     {
-        ota.start_req ota_start_req = 1;    // OTA开始请求 方向 服务器 -> 设备
-        ota.start_res ota_start_res = 2;    // OTA开始响应 方向 设备 -> 服务器
+        common.heartbeat heartbeat = 1;     // 心跳包 方向 设备 -> 服务器
 
-        ota.data_send ota_data_send = 3;    // OTA数据发送       方向 服务器 -> 设备
-        ota.data_recv ota_data_recv = 4;    // OTA数据接收结果   方向 设备 -> 服务器
+        ota.start_req ota_start_req = 2;    // OTA开始请求 方向 服务器 -> 设备
+        ota.start_res ota_start_res = 3;    // OTA开始响应 方向 设备 -> 服务器
 
-        ota.result_get_req ota_result_get_req = 5;  // OTA结果获取       方向 服务器 -> 设备
-        ota.result_get_res ota_result_get_res = 6;  // OTA结果上传       方向 设备 -> 服务器
+        ota.data_send ota_data_send = 4;    // OTA数据发送       方向 服务器 -> 设备
+        ota.data_recv ota_data_recv = 5;    // OTA数据接收结果   方向 设备 -> 服务器
+
+        ota.result_get_req ota_result_get_req = 6;  // OTA结果获取       方向 服务器 -> 设备
+        ota.result_get_res ota_result_get_res = 7;  // OTA结果上传       方向 设备 -> 服务器
     }
 }

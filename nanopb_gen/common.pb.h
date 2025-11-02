@@ -15,6 +15,13 @@ typedef enum _common_error_code {
     common_error_code_FAILED = 1
 } common_error_code;
 
+/* Struct definitions */
+/* 心跳包 */
+typedef struct _common_heartbeat {
+    char dummy_field;
+} common_heartbeat;
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -24,6 +31,28 @@ extern "C" {
 #define _common_error_code_MAX common_error_code_FAILED
 #define _common_error_code_ARRAYSIZE ((common_error_code)(common_error_code_FAILED+1))
 
+
+
+/* Initializer values for message structs */
+#define common_heartbeat_init_default            {0}
+#define common_heartbeat_init_zero               {0}
+
+/* Field tags (for use in manual encoding/decoding) */
+
+/* Struct field encoding specification for nanopb */
+#define common_heartbeat_FIELDLIST(X, a) \
+
+#define common_heartbeat_CALLBACK NULL
+#define common_heartbeat_DEFAULT NULL
+
+extern const pb_msgdesc_t common_heartbeat_msg;
+
+/* Defines for backwards compatibility with code written before nanopb-0.4.0 */
+#define common_heartbeat_fields &common_heartbeat_msg
+
+/* Maximum encoded size of messages (where known) */
+#define COMMON_COMMON_PB_H_MAX_SIZE              common_heartbeat_size
+#define common_heartbeat_size                    0
 
 #ifdef __cplusplus
 } /* extern "C" */

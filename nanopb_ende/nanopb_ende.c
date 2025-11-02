@@ -7,6 +7,10 @@
 #include "string.h"
 #include "stdarg.h"
 
+#include "elog.h"
+#define LOG_TAG "nanopb_ende"
+#define loge(...) log_e(__VA_ARGS__)
+
 /**
  * @brief CRC校验
  * @param data 数据
@@ -41,7 +45,7 @@ static uint16_t modbus_crc(uint8_t *data, uint16_t len)
  * @param buffer_size 编码缓冲区大小
  * @return 编码长度
  */
-uint16_t nanopb_encode(Frame *feame, uint8_t *buffer, uint16_t buffer_size)
+static uint16_t nanopb_encode(Frame *feame, uint8_t *buffer, uint16_t buffer_size)
 {
     pb_ostream_t stream;
     stream = pb_ostream_from_buffer(buffer, buffer_size);
@@ -51,6 +55,7 @@ uint16_t nanopb_encode(Frame *feame, uint8_t *buffer, uint16_t buffer_size)
     }
     else
     {
+        loge("nanopb_packed error encode %s", PB_GET_ERROR(&stream));
         return 0;
     }
 } 
@@ -62,11 +67,16 @@ uint16_t nanopb_encode(Frame *feame, uint8_t *buffer, uint16_t buffer_size)
  * @param frame 解码帧
  * @return true 成功 false 失败
  */
-bool nanopb_decode(uint8_t *buffer, uint16_t buffer_size, Frame *frame)
+static bool nanopb_decode(uint8_t *buffer, uint16_t buffer_size, Frame *frame)
 {
     pb_istream_t stream;
     stream = pb_istream_from_buffer(buffer, buffer_size);
-    return pb_decode(&stream, Frame_fields, frame);
+    bool res = pb_decode(&stream, Frame_fields, frame);
+    if (!res)
+    {
+        loge("nanopb_decode error: %s", PB_GET_ERROR(&stream));
+    }
+    return res;
 }
 
 
@@ -87,8 +97,12 @@ uint16_t nanopb_packed(Frame *frame, packed_t *packed, uint8_t addr)
         packed->address = addr;
         packed->head = NANOPB_PACK_MESSAGE_HEAD;
         packed->nanopb_crc16 = modbus_crc(packed->nanopb_data, pb_len);
+        return pb_len + NANOPB_PACK_HEAD_LEN;
     }
-    return pb_len;
+    else
+    {
+        return 0;
+    }    
 }
 
 /**
@@ -109,11 +123,13 @@ bool nanopb_unpacked(packed_t *packed, Frame *frame)
         }
         else
         {
+            loge("nanopb_unpacked error decode");
             return false;
         }
     }
     else
     {
+        loge("nanopb_unpacked error head: %04x", packed->head);
         return false;
     }
 }

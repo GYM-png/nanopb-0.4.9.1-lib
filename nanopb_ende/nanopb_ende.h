@@ -22,6 +22,9 @@ typedef struct
 }packed_t;
 #pragma pack()
 
+uint16_t nanopb_packed(Frame *frame, packed_t *packed, uint8_t addr);
+bool nanopb_unpacked(packed_t *packed, Frame *frame);
+void nanopb_sprintf(char *field, uint16_t field_size, char *format, ...);
 
 
 #endif

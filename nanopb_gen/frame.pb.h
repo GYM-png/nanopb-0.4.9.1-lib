@@ -15,6 +15,7 @@
 typedef struct _Frame {
     pb_size_t which_load;
     union {
+        common_heartbeat heartbeat; /* 心跳包 方向 设备 -> 服务器 */
         ota_start_req ota_start_req; /* OTA开始请求 方向 服务器 -> 设备 */
         ota_start_res ota_start_res; /* OTA开始响应 方向 设备 -> 服务器 */
         ota_data_send ota_data_send; /* OTA数据发送       方向 服务器 -> 设备 */
@@ -30,27 +31,30 @@ extern "C" {
 #endif
 
 /* Initializer values for message structs */
-#define Frame_init_default                       {0, {ota_start_req_init_default}}
-#define Frame_init_zero                          {0, {ota_start_req_init_zero}}
+#define Frame_init_default                       {0, {common_heartbeat_init_default}}
+#define Frame_init_zero                          {0, {common_heartbeat_init_zero}}
 
 /* Field tags (for use in manual encoding/decoding) */
-#define Frame_ota_start_req_tag                  1
-#define Frame_ota_start_res_tag                  2
-#define Frame_ota_data_send_tag                  3
-#define Frame_ota_data_recv_tag                  4
-#define Frame_ota_result_get_req_tag             5
-#define Frame_ota_result_get_res_tag             6
+#define Frame_heartbeat_tag                      1
+#define Frame_ota_start_req_tag                  2
+#define Frame_ota_start_res_tag                  3
+#define Frame_ota_data_send_tag                  4
+#define Frame_ota_data_recv_tag                  5
+#define Frame_ota_result_get_req_tag             6
+#define Frame_ota_result_get_res_tag             7
 
 /* Struct field encoding specification for nanopb */
 #define Frame_FIELDLIST(X, a) \
-X(a, STATIC,   ONEOF,    MESSAGE,  (load,ota_start_req,load.ota_start_req),   1) \
-X(a, STATIC,   ONEOF,    MESSAGE,  (load,ota_start_res,load.ota_start_res),   2) \
-X(a, STATIC,   ONEOF,    MESSAGE,  (load,ota_data_send,load.ota_data_send),   3) \
-X(a, STATIC,   ONEOF,    MESSAGE,  (load,ota_data_recv,load.ota_data_recv),   4) \
-X(a, STATIC,   ONEOF,    MESSAGE,  (load,ota_result_get_req,load.ota_result_get_req),   5) \
-X(a, STATIC,   ONEOF,    MESSAGE,  (load,ota_result_get_res,load.ota_result_get_res),   6)
+X(a, STATIC,   ONEOF,    MESSAGE,  (load,heartbeat,load.heartbeat),   1) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (load,ota_start_req,load.ota_start_req),   2) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (load,ota_start_res,load.ota_start_res),   3) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (load,ota_data_send,load.ota_data_send),   4) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (load,ota_data_recv,load.ota_data_recv),   5) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (load,ota_result_get_req,load.ota_result_get_req),   6) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (load,ota_result_get_res,load.ota_result_get_res),   7)
 #define Frame_CALLBACK NULL
 #define Frame_DEFAULT NULL
+#define Frame_load_heartbeat_MSGTYPE common_heartbeat
 #define Frame_load_ota_start_req_MSGTYPE ota_start_req
 #define Frame_load_ota_start_res_MSGTYPE ota_start_res
 #define Frame_load_ota_data_send_MSGTYPE ota_data_send
