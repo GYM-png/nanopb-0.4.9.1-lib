@@ -7,9 +7,9 @@
 #include "string.h"
 #include "stdarg.h"
 
-#include "elog.h"
-#define LOG_TAG "nanopb_ende"
-#define loge(...) log_e(__VA_ARGS__)
+#include "flexi_log.h"
+#define FLOG_TAG "nanopb_ende"
+
 
 /**
  * @brief CRC校验
