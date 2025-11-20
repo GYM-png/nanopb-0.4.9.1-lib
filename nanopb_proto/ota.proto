@@ -1,0 +1,56 @@
+syntax = "proto3";
+import "nanopb.proto";
+import "common.proto";
+
+package ota;
+
+enum error_code
+{
+    OTA_ERROR_SUCCESS = 0;              //成功
+    OTA_ERROR_FILE_NOT_FOUND = 1;       //文件不存在
+    OTA_ERROR_FILE_SIZE_TOO_LARGE = 2;  //文件过大
+    OTA_ERROR_FILE_CRC32_ERROR = 3;     //文件CRC32错误
+    OTA_ERROR_FILE_VERSION_ERROR = 4;   //版本号错误
+    OTA_ERROR_FILE_NOT_SUPPORT = 5;     //文件不支持
+}
+
+
+//OTA 开始请求 
+message start_req
+{
+    uint32 file_size = 1;   //文件大小
+    uint32 file_crc32 = 2;    //文件CRC32
+    string version = 3[(nanopb).max_size = 40];     //版本号
+}
+
+//OTA 启动应答
+message start_res
+{
+    uint32 chunk_size = 1;   //数据块大小
+    error_code error_code = 2;
+}
+
+//OTA 数据包
+message data_send
+{
+    bytes data = 1[(nanopb).max_size = 1024];   //数据
+}
+
+//OTA 数据应答
+message data_recv
+{
+    uint32 last_vaild_chunk = 1;   //最后有效数据块
+    error_code error_code = 2;   //错误码
+}
+
+//OTA 获取OTA结果
+message result_get_req
+{
+
+}
+
+//OTA 结果
+message result_get_res
+{
+    error_code error_code = 1;
+}

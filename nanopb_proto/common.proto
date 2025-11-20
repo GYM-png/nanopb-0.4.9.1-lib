@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package common;
+
+enum error_code 
+{
+    SUCCESS = 0;    
+    FAILED = 1;
+}
+
+// 心跳包
+message heartbeat   
+{
+
+}
